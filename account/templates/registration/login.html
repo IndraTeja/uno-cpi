@@ -1,0 +1,71 @@
+{% extends 'home/base_home.html' %}
+
+{% block content %}
+
+<style type="text/css">
+
+.forget
+{
+	position: relative;
+	left: 95px;
+	top: 10px;
+	width: 100px;
+	height: 40px;
+	border-radius: 6px;
+	color: red;
+}
+
+
+
+@media (max-width: 700px)
+{
+h4
+{
+font-size:1.3em
+}
+}
+
+
+</style>
+
+
+
+<div class="container ">
+	{% for message in messages %}
+        <div class="alert alert-danger">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+        {{ message }}
+        </div>
+    {% endfor %}
+    <div class ="row justify-content-md-center">
+        <div class="col-xl-4 col-md-6">
+	        <div class = "panel panel-default">
+		        <div class="panel-heading text-center"><h4>Login</h4></div>
+	    	        <div class="panel-body">
+
+                        <div class="login-form">
+                            <form action='.' method="post">
+                            {% csrf_token %}
+							<label class="{% url 'account:loginPage' %}">{{ loginError }}</label><br>
+			                <input class="input" type="email" name="email"  placeholder="Email" required>
+            			    <br>
+            			    <input class="input" type="password" name="password" placeholder="Password" required><br>
+
+                            <p><button type="submit" class="btn btn-custom">Login</button></p>
+            			    <a href='/password_reset/' class="forget">Forgot Password?</a><br><br>
+
+		                    </form>
+           	            </div>
+	                </div>
+                </div>
+        </div>
+
+    </div>
+</div>
+
+<br>
+<br>
+<br><br><br><br>
+<br>
+{% endblock %}
+

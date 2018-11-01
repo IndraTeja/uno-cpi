@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+  <title>Community Partnership Initiative</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+  <link href="{% static 'css/Header.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/Navigation.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/about.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/footer.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/panel.css' %}" rel="stylesheet" type="text/css">
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css">
+
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap4.min.js"></script>
+
+
+<style>
+
+#contact
+{
+background: #D3D3D3;
+}
+
+a
+{
+color:black;
+}
+
+.navbar
+{
+padding: .1rem 1rem;
+}
+
+#example1
+    {
+        margin-top:100px;
+        margin-left: 250px;
+    }
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- Navbar Begins -->
+
+<nav class="navbar navbar-expand-md navbar-custom sticky-top">
+    <button class="navbar-toggler" data-toggle="collapse" data-target="#target" id="Menu">Menu</button>
+    <div class="collapse navbar-collapse" id="target">
+
+        <a class="navbar-brand" href="/">
+            <img src="https://www.unomaha.edu/_files/images/logo-subsite-o-2.png"></a>
+            <a class ="navbar-brand" href='/campusHome' id="uno">University of Nebraska Omaha
+              <b id="cpi">Community Partnership Initiative</b>
+            </a>
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav ml-auto">
+              <!--li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa fa-tachometer"></i>Dashboard</a>
+              </li-->
+              <li class="nav-item">
+                <a class="nav-link" href='/campususerproject/'><i class="fa fa-product-hunt"></i>Project</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa fa-eye"></i>Reports</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href='/registerCommunityPartnerUser/'><i class="fa fa-user-plus"></i>Add Community Partner User</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class= "nav-link dropdown-toggle" data-toggle="dropdown" data-target="dropdown_target" href='#'>
+                  <i class="fa fa-user-circle-o"></i>Welcome {{ user.first_name }}<img class="rounded-circle account-img" src="{{ user.avatar.url }}" height="30" width="30">
+                  <span class="caret"></span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdown_target">
+                  <a class="dropdown-item" href="{% url 'partners:userprofile' %}"><i class="fa fa-user"></i>User</a>
+                  <a class="dropdown-item" href='{% url "partners:orgprofile" %}'><i class="fa fa-university"></i>Organization</a>
+                  <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Logout</a>
+                </div>
+              </li>
+            {% endif %}
+            </ul>
+    </div>
+</nav>
+
+
+
+<!-- Navbar ends-->
+
+<!-- Table Begins ---- Add Block Content Here-->
+
+<div class="container">
+    <br>
+</div>
+
+{% block content %}
+
+{% endblock %}
+
+
+<!-- Block Ends here-->
+
+
+<!--Contact Begins -->
+
+
+<section id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-heading">Let's Get In Touch!</h2>
+            <hr class="my-4">
+            <p class="mb-5">Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 ml-auto text-center">
+            <i class="fa fa-skype fa-3x mb-3 sr-contact-1"></i>
+            <p>
+                <a href="skype:Goutham Viswanathan?call"><b>Connect with us on Skype</b></a>
+            </p>
+          </div>
+          <div class="col-lg-4 mr-auto text-center">
+            <i class="fa fa-envelope fa-3x mb-3 sr-contact-2"></i>
+            <p>
+              <a href="mailto:your-email@your-domain.com"><b>kshenouda@unomaha.edu</b></a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+<!-- Contact Ends here-->
+
+
+
+
+<!--Footer Begins here-->
+
+
+<footer>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+            <span class="copyright">Copyright &copy; Community Partnership Initiative 2018</span>
+          </div>
+          <div class="col-md-6">
+            <ul class="footertext">
+                UNO is an AA/EEO /ADA institution. For questions, accommodations or assistance
+please call/contact ADA/504 coordinator (phone: 402.554.3490 or TTY
+402.554.2978) or the director of Accessibility Services Center (phone:
+402.554.2872). The University of Nebraska does not discriminate based on race,
+color, ethnicity, national origin, sex, pregnancy, sexual orientation, gender identity,
+religion, disability, age, genetic information, veteran status, marital status, and/or
+political affiliation in its programs, activities, or employment.
+            </ul>
+          </div>
+          <div class="col-md-3">
+              <ul class="imgadjust">
+                <img src="{% static 'img/UNOFooter1.png' %}">
+              </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+
+
+<!-- Footer Ends Here-->
+
+{% block js %}
+
+{% endblock %}
+
+
+{% block custom_js %}
+
+{% endblock %}
+
+
+</body>
+</html>
