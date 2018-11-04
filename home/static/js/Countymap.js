@@ -1,8 +1,12 @@
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibG9va3VwbWFuIiwiYSI6ImNqbW41cmExODBxaTEzeHF0MjhoZGg1MnoifQ.LGL5d5zGa1z6ms-IVyn7sw';
 var countyData = "";
-var communityData = "";
+$.get("static/GEOJSON/USCounties_2.geojson", function(data) { //load JSON file from static/GEOJSON
+    countyData = jQuery.parseJSON(data);
+});
 var k12Data = "";
+var communityData = "";
+var referencedincome = 0;
 $.get("static/GEOJSON/CommunityPartners.geojson", function(data) { //load JSON file from static/GEOJSON
     communityData = jQuery.parseJSON(data);
     var features=communityData["features"];
@@ -20,19 +24,24 @@ $.get("static/GEOJSON/CommunityPartners.geojson", function(data) { //load JSON f
                 if (turf.booleanPointInPolygon(point,poly)) {
                     polyid = i+1;
                 }
+            };
+            for (var i = 0; i < counties.length; i++){
+                var coord = counties[i].coordinates;
+                var countycoord = turf.polygon(coord);
+                if (turf.booleanPointInPolygon(point,countycoord)){
+                    referencedincome = counties[i]["Income"]
+                }
             }
-
         }
         feature.properties["districtnumber"] = polyid;
+		feature.properties["income"] = referencedincome;
 	});
 	communityData["features"]=features;
 });
 $.get("static/GEOJSON//K-12Partners.geojson", function(data) { //load JSON file from static/GEOJSON
     k12Data = jQuery.parseJSON(data);
 });
-$.get("static/GEOJSON/USCounties_2.geojson", function(data) { //load JSON file from static/GEOJSON
-    countyData = jQuery.parseJSON(data);
-});
+
 
 var map = new mapboxgl.Map({
     container: 'map',
@@ -82,6 +91,8 @@ function parseDescription(message) {
             string += '<span style="font-weight:bold">' + 'Household Income' + '</span>' + ": " + message[i] + "<br>";
         } else if (i=="districtnumber"){
             string += '<span style="font-weight:bold">' + "District Number" + '</span>' + ": " + message[i] + "<br>"
+        } else if (i=="income"){
+            string += '<span style="font-weight:bold">' + "Household Income" + '</span>' + ": " + message[i] + "<br>"
         }
     }
     return string;
@@ -222,7 +233,6 @@ map.on("load",function() {
 	//******************************Add a county map **********************************
     countyData.features.forEach(function(feature){
         var income=feature.properties["Income"];
-
         if(income < 30000) {
               layerID = "income1";
               if (!map.getLayer(layerID)) {
@@ -808,7 +818,5 @@ map.on("load",function() {
 				})
 
 			})
-
-
 
 })

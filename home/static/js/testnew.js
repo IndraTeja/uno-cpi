@@ -15,7 +15,7 @@ var map = new mapboxgl.Map({
     // container id specified in the HTML
     container: 'map',
     // style URL
-    style: 'mapbox://styles/mapbox/light-v9',
+    style: 'mapbox://styles/mapbox/streets-v10',
     // initial position in [lon, lat] format
     center: [-95.957309, 41.276479],
     // initial zoom
@@ -96,7 +96,7 @@ $.get("static/GEOJSON/CommunityPartners.geojson", function(data) { //load JSON f
             }
 
         }
-        feature.properties["districtnumber"] = polyid;
+        feature.properties["districtnumber"] = polyid; //assign value to districtnumber key
 	});
 	communityData["features"]=features;
 })
@@ -132,13 +132,13 @@ map.on('load', function(e) {
                 "source": "districtData",
                 'layout': {},
                 'paint': {
-                    "fill-color": "#888",
+                    "fill-color": "#ADFF2F",
                     "fill-opacity": ["case",
                         ["boolean", ["feature-state", "hover"], false],
                         1,
-                        0.4
+                        0.2
                     ],
-                    "fill-outline-color": "#0000AA"
+                    "fill-outline-color": "#888"
                 },
                 "filter": ["==", "id", symbol]
             });
@@ -153,13 +153,13 @@ map.on('load', function(e) {
         "source": "districtData",
         'layout': {},
         'paint': {
-            "fill-color": "#888",
+            "fill-color": "#ADFF2F",
             "fill-opacity": ["case",
                 ["boolean", ["feature-state", "hover"], false],
                 1,
                 0.08
             ],
-            "fill-outline-color": "#0000AA"
+            "fill-outline-color": "#888"
         }
     });
 
@@ -211,7 +211,7 @@ map.on('load', function(e) {
                     "paint": {
                         "circle-radius": 8,
                         "circle-opacity": 0.8,
-                        "circle-color": '#223b53'
+                        "circle-color": '#0B0B61'
                     },
                     "filter": ["all", ["==", "PrimaryMissionFocus", "Economic Sufficiency"],
                         ['in', "time", "Spring 2018", "Fall 2018", "Summer 2018", "winter 2018"]
@@ -564,8 +564,8 @@ function buildLocationList(data) {
         link.className = 'title';
         link.dataPosition = i;
         link.innerHTML = prop['CommunityPartner'];
-        var details = listing.appendChild(document.createElement('div'));
-        details.innerHTML = description;
+        //var details = listing.appendChild(document.createElement('div'));
+        //details.innerHTML = description;
 
         link.addEventListener('click', function(e) {
             // Update the currentFeature to the store associated with the clicked link

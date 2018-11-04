@@ -173,7 +173,7 @@ map.on("load", function() {
                     "paint": {
                         "circle-radius": 8,
                         "circle-opacity": 0.8,
-                        "circle-color": '#223b53'
+                        "circle-color": '#0B0B61'
                     },
                     "filter": ["all", ["==", "ProjectMission", "Economic Sufficiency"],
                         ['in', "Semester", "Fall 2016", "Spring 2017", "Summer 2017", "Fall 2017",
