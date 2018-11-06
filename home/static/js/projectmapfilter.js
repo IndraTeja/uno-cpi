@@ -1,5 +1,70 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoibG9va3VwbWFuIiwiYSI6ImNqbW41cmExODBxaTEzeHF0MjhoZGg1MnoifQ.LGL5d5zGa1z6ms-IVyn7sw';
 
+
+var hoveredStateId = null; //this variable is used for hovering over the districts
+var layerIDs = []; // Will contain a list used to filter against. This is for filtering Legislative Districts
+var names = [];
+var filterInput = document.getElementById('filter-input'); //this is for filtering the Legislative Districts
+
+
+//Get map
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v10',
+    center: [-95.957309, 41.276479],
+    zoom: 5
+});
+
+var popup;
+popup = new mapboxgl.Popup({
+    closeButton: true,
+    closeOnClick: true
+});
+
+//parsing the description
+function parseDescription(message) {
+    var string = ""
+
+
+    for (var i in message) {
+
+        if (i == "ProjectName") {
+            string += '<span style="font-weight:bold">' + i + '</span>' + " : " + message[i] + "<br>"
+        }
+        if (i == "ProjectMission") {
+            string += '<span style="font-weight:bold">' + i + '</span>' + " : " + message[i] + "<br>"
+        } else if (i == "PhoneNumber") {
+            string += '<span style="font-weight:bold">' + i + '</span>' + " : " + message[i] + "<br>"
+        } else if (i == "Website") {
+            var website = message[i];
+            var base = "http://";
+            if (website === null || website == "null" || website == "") {
+            $website.hide();
+//                string += '<span style="font-weight:bold">' + i + '</span>' + " : " + message[i] + "<br>";
+            } else
+            if (!website.includes("http")) {
+                website = base.concat(website);
+                string += `<span style="font-weight:bold">${i}</span> : <a target="_blank" href="${website}" class="popup">${website}</a><br>`;
+            } else {
+                string += `<span style="font-weight:bold">${i}</span> : <a target="_blank" href="${website}" class="popup">${website}</a><br>`;
+            }
+            }
+            else if (i == "State"){
+
+            string += '<span style="font-weight:bold">' + 'State' + '</span>' + ": " + message[i] + "<br>";
+            }
+            else if (i == "districtnumber"){
+
+            string += '<span style="font-weight:bold">' + "District Number" + '</span>' + ": " + message[i] + "<br>";
+
+         }
+            //string += '<span style="font-weight:bold">' + i + '</span>: <a target="_blank" href="' + message[i] + '">' + message[i] + '</a><br>';
+
+    }
+    return string;
+};
+///****************Load data*************************//
+
 var districtData = "";
 var projectData = "";
 $.get("static/GEOJSON/CommunityPartners.geojson", function(data) { //load JSON file from static/GEOJSON
@@ -54,66 +119,6 @@ $.get("static/GEOJSON/Projects.geojson", function(data) { //load JSON file from 
 	projectData["features"]=features;
 });
 
-var hoveredStateId = null; //this variable is used for hovering over the districts
-var layerIDs = []; // Will contain a list used to filter against. This is for filtering Legislative Districts
-var names = [];
-var filterInput = document.getElementById('filter-input'); //this is for filtering the Legislative Districts
-
-//Get map
-var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v10',
-    center: [-95.957309, 41.276479],
-    zoom: 5
-});
-map.addControl(new mapboxgl.NavigationControl());
-//parsing the description
-function parseDescription(message) {
-    var string = ""
-
-
-    for (var i in message) {
-
-        if (i == "ProjectName") {
-            string += '<span style="font-weight:bold">' + i + '</span>' + " : " + message[i] + "<br>"
-        }
-        if (i == "ProjectMission") {
-            string += '<span style="font-weight:bold">' + i + '</span>' + " : " + message[i] + "<br>"
-        } else if (i == "PhoneNumber") {
-            string += '<span style="font-weight:bold">' + i + '</span>' + " : " + message[i] + "<br>"
-        } else if (i == "Website") {
-            var website = message[i];
-            var base = "http://";
-            if (website === null || website == "null" || website == "") {
-            $website.hide();
-//                string += '<span style="font-weight:bold">' + i + '</span>' + " : " + message[i] + "<br>";
-            } else
-            if (!website.includes("http")) {
-                website = base.concat(website);
-                string += `<span style="font-weight:bold">${i}</span> : <a target="_blank" href="${website}" class="popup">${website}</a><br>`;
-            } else {
-                string += `<span style="font-weight:bold">${i}</span> : <a target="_blank" href="${website}" class="popup">${website}</a><br>`;
-            }
-            }
-            else if (i == "State"){
-
-            string += '<span style="font-weight:bold">' + 'State' + '</span>' + ": " + message[i] + "<br>";
-            }
-            else if (i=="districtnumber"){
-
-            string += '<span style="font-weight:bold">' + "District Number" + '</span>' + ": " + message[i] + "<br>"
-
-         }
-            //string += '<span style="font-weight:bold">' + i + '</span>: <a target="_blank" href="' + message[i] + '">' + message[i] + '</a><br>';
-
-    }
-    return string;
-};
-var popup;
-popup = new mapboxgl.Popup({
-    closeButton: true,
-    closeOnClick: true
-});
 //Get style
 map.on("load", function() {
 
@@ -497,6 +502,9 @@ map.on("load", function() {
 			}
 		}
 	});
+
+	//*******************************Search by legislative district*************************///
+
     //******************************Show a marker when clicking on the list on the left hand side**********************************
 function buildLocationList(data) {
     // Iterate through the list of stores
@@ -618,8 +626,30 @@ function renderListings(features){
 
     }
 }
-
+//**********************************Dropdown Legislative District********************************
+//   var selectDistrict = document.getElementById("districtid");
+//    selectDistrict.addEventListener("change", function(e) {
+//        var value = e.target.value.trim();
+//        var comlist=["show1","show2","show3","show4","show5","show6"];//community id
+//            map.setFilter("show1", ['in', "districtnumber", value])
+//            map.setFilter("show2", ['in', "districtnumber", value])
+//            map.setFilter("show3", ['in', "districtnumber", value])
+//            map.setFilter("show4", ['in', "districtnumber", value])
+//            map.setFilter("show5", ['in', "districtnumber", value])
+//            map.setFilter("show6", ['in', "districtnumber", value])
+//            })
     //******************************Search Legislative District**********************************
+     filterInput.addEventListener("keydown",function(e){
+		if(e.keyCode==8){
+			map.setFilter("show1",["==", "PrimaryMissionFocus", "Social Justice"]);
+			map.setFilter("show2",["==", "PrimaryMissionFocus", "Educational Support"]);
+			map.setFilter("show3",["==", "PrimaryMissionFocus", "Economic Sufficiency"]);
+			map.setFilter("show4",["==", "PrimaryMissionFocus", "International Service"]);
+			map.setFilter("show5",["==", "PrimaryMissionFocus", "Environmental Stewardship"]);
+			map.setFilter("show6",["==", "PrimaryMissionFocus", "Health & Wellness"]);
+		}
+	});
+
     filterInput.addEventListener('keyup', function(e) {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
@@ -628,6 +658,95 @@ function renderListings(features){
             map.setLayoutProperty(layerID, 'visibility',
                 layerID.indexOf(value) > -1 ? 'visible' : 'none');
         });
+        //get geojosn data from the map
+			var cmValues1=map.queryRenderedFeatures({layers:['show1']});
+			var cmValues2=map.queryRenderedFeatures({layers:['show2']});
+			var cmValues3=map.queryRenderedFeatures({layers:['show3']});
+			var cmValues4=map.queryRenderedFeatures({layers:['show4']});
+			var cmValues5=map.queryRenderedFeatures({layers:['show5']});
+			var cmValues6=map.queryRenderedFeatures({layers:['show6']});
+
+			//filter the name(s) that include the input value
+			var filtered1=cmValues1.filter(function(feature){
+				var districtnumber=normalize(feature.properties.districtnumber.toString());
+				return districtnumber.indexOf(value)==0;
+			});
+			var filtered2=cmValues2.filter(function(feature){
+				var districtnumber=normalize(feature.properties.districtnumber.toString());
+				return districtnumber.indexOf(value)==0;
+			});
+			var filtered3=cmValues3.filter(function(feature){
+				var districtnumber=normalize(feature.properties.districtnumber.toString());
+				return districtnumber.indexOf(value)==0;
+			});
+			var filtered4=cmValues4.filter(function(feature){
+				var districtnumber=normalize(feature.properties.districtnumber.toString());
+				return districtnumber.indexOf(value)==0;
+			});
+			var filtered5=cmValues5.filter(function(feature){
+				var districtnumber=normalize(feature.properties.districtnumber.toString());
+				return districtnumber.indexOf(value)==0;
+			});
+			var filtered6=cmValues6.filter(function(feature){
+				var districtnumber=normalize(feature.properties.districtnumber.toString());
+				return districtnumber.indexOf(value)==0;
+			});
+
+			filtereds=filtered1.concat(filtered2,filtered3,filtered4,filtered5,filtered6);
+
+
+			if(filtered1.length>0){
+				map.setFilter("show1",['match',['get','id'],filtered1.map(function(feature){
+
+					return feature.properties.id;
+				}),true,false]);
+			}else{
+				map.setFilter("show1",['match',['get','id'],-1,true,false]);
+			}
+			if(filtered2.length>0){
+				map.setFilter("show2",['match',['get','id'],filtered2.map(function(feature){
+
+					return feature.properties.id;
+				}),true,false]);
+			}else{
+				map.setFilter("show2",['match',['get','id'],-1,true,false]);
+			}
+
+			if(filtered3.length>0){
+				map.setFilter("show3",['match',['get','id'],filtered3.map(function(feature){
+
+					return feature.properties.id;
+				}),true,false]);
+			}else{
+				map.setFilter("show3",['match',['get','id'],-1,true,false]);
+			}
+
+			if(filtered4.length>0){
+				map.setFilter("show4",['match',['get','id'],filtered4.map(function(feature){
+
+					return feature.properties.id;
+				}),true,false]);
+			}else{
+				map.setFilter("show4",['match',['get','id'],-1,true,false]);
+			}
+
+			if(filtered5.length>0){
+				map.setFilter("show5",['match',['get','id'],filtered5.map(function(feature){
+
+					return feature.properties.id;
+				}),true,false]);
+			}else{
+				map.setFilter("show5",['match',['get','id'],-1,true,false]);
+			}
+
+			if(filtered6.length>0){
+				map.setFilter("show6",['match',['get','id'],filtered6.map(function(feature){
+
+					return feature.properties.id;
+				}),true,false]);
+			}else{
+				map.setFilter("show6",['match',['get','id'],-1,true,false]);
+			}
     });
     //******************************Search Community Part**********************************
     //******************************Show data when the mouse moves on it**********************************

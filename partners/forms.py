@@ -38,8 +38,8 @@ class CampusPartnerContactForm(forms.ModelForm):
         labels = {
             'first_name': ('Contact First Name'),
             'last_name': ('Contact Last Name'),
-            'work_phone': ('Contact Work Phone#'),
-            'cell_phone': ('Contact Cell Phone#'),
+            'work_phone': ('Contact Work Phone'),
+            'cell_phone': ('Contact Cell Phone'),
             'email_id': ('Contact Email'),
             'contact_type':('Contact Type'),
         }
