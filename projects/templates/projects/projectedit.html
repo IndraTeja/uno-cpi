@@ -4,7 +4,7 @@
       <style>
     label
     {
-    margin-left: 10px;
+    margin-left: 25px;
     font-weight: bold;
     }
  input[type=number],textarea[name=project_name],.form-control
@@ -18,12 +18,31 @@
          margin-left: 350px;
      }
  }
+
+    h4
+    {
+    line-height: 2.7;
+    }
+
+     .form-control,input[id=id_start_date],input[id=id_end_date], textarea[id=id_description],textarea[id=id_total_uno_hours],input[type=text],[type=password],[type=email],select[id=id_engagement_type], select[id=id_activity_type],textarea[id=id_description],select[id=id_semester],input[type=number],select[id=id_status]
+    {
+    width:95%;
+    border:2px solid #aaa;
+    border-radius:4px;
+    margin:10px 0 8px 4px;
+    outline:none;
+    padding:3px;
+    box-sizing:border-box;
+    transition:.3s;
+    margin-left: 22px;
+    }
+
     </style>
 <div class="container">
 
 <div class = "container">
     <div class = "panel panel-default">
-		<div class="panel-heading text-center"><h4>Edit Project</h4></div>
+        <div class="panel-heading text-center"><h4><b>Edit Project</b></h4></div>
 			<div class="panel-body">
 
        <form method="POST" class="project-form" >{% csrf_token %}
