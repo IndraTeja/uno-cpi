@@ -639,24 +639,41 @@ function renderListings(features){
 //            map.setFilter("show6", ['in', "districtnumber", value])
 //            })
     //******************************Search Legislative District**********************************
-     filterInput.addEventListener("keydown",function(e){
-		if(e.keyCode==8){
-			map.setFilter("show1",["==", "PrimaryMissionFocus", "Social Justice"]);
-			map.setFilter("show2",["==", "PrimaryMissionFocus", "Educational Support"]);
-			map.setFilter("show3",["==", "PrimaryMissionFocus", "Economic Sufficiency"]);
-			map.setFilter("show4",["==", "PrimaryMissionFocus", "International Service"]);
-			map.setFilter("show5",["==", "PrimaryMissionFocus", "Environmental Stewardship"]);
-			map.setFilter("show6",["==", "PrimaryMissionFocus", "Health & Wellness"]);
-		}
+    filterInput.addEventListener("keydown",function(e){
+
+			map.setFilter("show1",["==", "ProjectMission", "Social Justice"]);
+			map.setFilter("show2",["==", "ProjectMission", "Educational Support"]);
+			map.setFilter("show3",["==", "ProjectMission", "Economic Sufficiency"]);
+			map.setFilter("show4",["==", "ProjectMission", "International Service"]);
+			map.setFilter("show5",["==", "ProjectMission", "Environmental Stewardship"]);
+			map.setFilter("show6",["==", "ProjectMission", "Health & Wellness"]);
+
 	});
 
     filterInput.addEventListener('keyup', function(e) {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
         var value = e.target.value.trim().toLowerCase();
+        if(value=="")
+        {
+        	map.setFilter("show1",["==", "ProjectMission", "Social Justice"]);
+			map.setFilter("show2",["==", "ProjectMission", "Educational Support"]);
+			map.setFilter("show3",["==", "ProjectMission", "Economic Sufficiency"]);
+			map.setFilter("show4",["==", "ProjectMission", "International Service"]);
+			map.setFilter("show5",["==", "ProjectMission", "Environmental Stewardship"]);
+			map.setFilter("show6",["==", "ProjectMission", "Health & Wellness"]);
+
+        }
+
+
+
+        else if(value!=""){
+            console.log(value);
         layerIDs.forEach(function(layerID) {
+            console.log("dis:"+layerID.length);
+
             map.setLayoutProperty(layerID, 'visibility',
-                layerID.indexOf(value) > -1 ? 'visible' : 'none');
+                (layerID.indexOf(value) ==4)&&(layerID.length==(value.length+4)) ? 'visible' : 'none');
         });
         //get geojosn data from the map
 			var cmValues1=map.queryRenderedFeatures({layers:['show1']});
@@ -669,27 +686,34 @@ function renderListings(features){
 			//filter the name(s) that include the input value
 			var filtered1=cmValues1.filter(function(feature){
 				var districtnumber=normalize(feature.properties.districtnumber.toString());
-				return districtnumber.indexOf(value)==0;
+				console.log("1:"+districtnumber);
+                console.log(districtnumber==value);
+				return districtnumber==value;
 			});
 			var filtered2=cmValues2.filter(function(feature){
 				var districtnumber=normalize(feature.properties.districtnumber.toString());
-				return districtnumber.indexOf(value)==0;
+				console.log(districtnumber==value);
+				return districtnumber==value;
 			});
 			var filtered3=cmValues3.filter(function(feature){
 				var districtnumber=normalize(feature.properties.districtnumber.toString());
-				return districtnumber.indexOf(value)==0;
+				console.log(districtnumber==value);
+				return districtnumber==value;
 			});
 			var filtered4=cmValues4.filter(function(feature){
 				var districtnumber=normalize(feature.properties.districtnumber.toString());
-				return districtnumber.indexOf(value)==0;
+				console.log(districtnumber==value);
+				return districtnumber==value;
 			});
 			var filtered5=cmValues5.filter(function(feature){
 				var districtnumber=normalize(feature.properties.districtnumber.toString());
-				return districtnumber.indexOf(value)==0;
+				console.log(districtnumber==value);
+				return districtnumber==value;
 			});
 			var filtered6=cmValues6.filter(function(feature){
 				var districtnumber=normalize(feature.properties.districtnumber.toString());
-				return districtnumber.indexOf(value)==0;
+				console.log(districtnumber==value);
+				return districtnumber==value;
 			});
 
 			filtereds=filtered1.concat(filtered2,filtered3,filtered4,filtered5,filtered6);
@@ -747,7 +771,10 @@ function renderListings(features){
 			}else{
 				map.setFilter("show6",['match',['get','id'],-1,true,false]);
 			}
+        }
+
     });
+
     //******************************Search Community Part**********************************
     //******************************Show data when the mouse moves on it**********************************
 
