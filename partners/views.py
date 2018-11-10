@@ -21,6 +21,7 @@ def registerCampusPartner(request):
     for object in Department.objects.order_by('department_name'):
         departmnts.append(object.department_name)
 
+
     if request.method == 'POST':
         campus_partner_form = CampusPartnerForm(request.POST)
 
