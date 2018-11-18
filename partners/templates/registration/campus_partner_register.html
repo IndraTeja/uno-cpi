@@ -44,15 +44,17 @@ font-weight: bold;
   {
       margin-top: 20px;
   }
-	.select2-container--default .select2-selection--single
+
+.select2-container--default .select2-selection--single
 {
 margin-left:22px;
-}
+width:100%
+  }
+
 .select2-container--open .select2-dropdown--below
 {
 margin-left:22px
 }
-
 
 </style>
 <div class = "container">
@@ -120,13 +122,15 @@ margin-left:22px
                     <!--/div-->
                     <!--div class="row"-->
                         <div class="col-md-6 col-sm-6">
-                            <b>Work Phone:</b>
-                         <input type="text" id="work_phone" name="txtInput" placeholder="(555) 555-5555" onkeydown="javascript:backspacerDOWN(this,event);" onkeyup="javascript:backspacerUP(this,event);" />
+                            <b>&nbsp&nbsp&nbspWork Phone:</b>
+                         <input type="text" name="txtInput" placeholder="(555) 555-5555" onkeydown="javascript:backspacerDOWN(this,event);" onkeyup="javascript:backspacerUP(this,event);" />
 
 
                         </div>
                         <div class="col-md-6 col-sm-6">
-                        {{ form.cell_phone|bootstrap }}
+                            <b>&nbsp&nbsp&nbspCell Phone:</b>
+                            <input type="text" id="cell_phone" name="txtInput" placeholder="(555) 555-5555" onkeydown="javascript:backspacerDOWN(this,event);" onkeyup="javascript:backspacerUP(this,event);" />
+                        <!--{{ form.cell_phone|bootstrap }}-->
                         </div>
 
                     <!--/div-->

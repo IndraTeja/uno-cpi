@@ -47,7 +47,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', False)
 
         if extra_fields.get('is_campuspartner') is not True:
-            raise ValueError('Canpus Partner must have is_campuspartner=True.')
+            raise ValueError('Campus Partner must have is_campuspartner=True.')
 
         return self._create_user(email, password, **extra_fields)
 
@@ -71,8 +71,8 @@ class Contact(models.Model):
     )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    work_phone= models.CharField(max_length=10,  validators=[MinLengthValidator(10)], blank=True)
-    cell_phone= models.CharField(max_length=10, validators=[MinLengthValidator(10)], unique=True, blank=True)
+    work_phone= models.CharField(max_length=15,  validators=[MinLengthValidator(10)], blank=True)
+    cell_phone= models.CharField(max_length=15, validators=[MinLengthValidator(10)], unique=True, blank=True)
     email_id = models.EmailField(unique=True)
     contact_type = models.CharField(max_length=15, choices=contacttype_choices, default='Select')
     community_partner = models.ForeignKey('partners.CommunityPartner', on_delete=models.CASCADE,null=True,blank=True)

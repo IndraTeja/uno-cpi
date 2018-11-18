@@ -40,7 +40,7 @@ class CampusPartnerContactForm(forms.ModelForm):
             'contact_type':('Contact Type'),
         }
 
-        widgets = {'work_phone': forms.TextInput({'placeholder': '##########'}),
+        widgets = {
                    'cell_phone': forms.TextInput({'placeholder': '##########'}),
                    'email_id': forms.TextInput({'placeholder': '@abc.edu'}),
                    }
