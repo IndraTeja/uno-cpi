@@ -22,6 +22,11 @@ from .filters import *
 from django.db.models import Sum
 # importing forms into home views.py
 from .forms import *
+import googlemaps
+from shapely.geometry import shape, Point
+import pandas as pd
+
+gmaps = googlemaps.Client(key='AIzaSyBoBkkxBnB7x_GKESVPDLguK0VxSTSxHiI')
 
 
 def home(request):
@@ -487,9 +492,77 @@ def EngagementType_Chart(request):
     return render(request, 'charts/engagementtypechart2.html',
                  {'chart': dump,'missions_filter':missions_filter,'academicyear_filter':academicyear_filter})
 
+##### Get the county GEOJSON ##############
+def countyGEO():
+    with open('home/static/GEOJSON/NEcounties2.geojson') as f:
+        geojson1 = json.load(f)
+
+    county = geojson1["features"]
+    return county
+
+##### Get the district GEOJSON ##############
+def districtGEO():
+    with open('home/static/GEOJSON/ID2.geojson') as f:
+        geojson = json.load(f)
+
+    district = geojson["features"]
+    return district
+
 ######## export data to Javascript (Testing) ################################
 def countyData(request):
+
     json_data = open('home/static/GEOJSON/NECounties2.geojson')
     countyData = json.load(json_data)
+
+    commPartners = CommunityPartner.objects.filter() #get all the community partners
+
+    collection = {'type': 'FeatureCollection', 'features': []} #create the shell of GEOJSON
+    ## get the district GEOJSON
+    district = open('home/static/GEOJSON/ID2.geojson')
+    geojson = json.load(district)
+
+    district = geojson["features"]
+    for commPartner in commPartners: #iterate through all community partners
+        #prepare the shell of the features key inside the GEOJSON
+        feature = {'type': 'Feature', 'properties': {'CommunityPartner': '', 'Address': '',
+                                                     'Website': '', 'Legislative District Number': '',
+                                                     'Income': '', 'County': ''},
+                   'geometry': {'type': 'Point', 'coordinates': []}}
+        if (commPartner.address_line1 != "N/A"): #check if a community partner's address is there
+            fulladdress = commPartner.address_line1 + ' ' + commPartner.city + ' ' + commPartner.state
+            geocode_result = gmaps.geocode(fulladdress) #get the coordinates
+            commPartner.latitude = geocode_result[0]['geometry']['location']['lat']
+            commPartner.longitude = geocode_result[0]['geometry']['location']['lng']
+            coord = Point([commPartner.longitude, commPartner.latitude]) #this is to prepare a variable to check which district a partner belongs to
+
+            commPartner.districtnumber = 0          #a placeholder value
+
+            for i in range(len(district)):          #iterate through a list of district polygons
+                property = district[i]
+                polygon = shape(property['geometry'])  #get the polygons
+                if polygon.contains(coord):         #check if a partner is in a polygon
+                    commPartner.districtnumber = property["id"] #assign the district number to a partner
+
+            County = countyData['features'] #get the array Features within the county GEOJSON
+            commPartner.income = 0          #placeholder value of the income
+
+            ### get the county name and household income ###
+            for m in range(len(County)): #iterate through the County Geojson
+                properties2 = County[m]
+                polygon = shape(properties2['geometry']) #get the polygon
+                if polygon.contains(coord):             #check if the partner in question belongs to a polygon
+                    commPartner.county = properties2['properties']['NAME']
+                    commPartner.income = properties2['properties']['Income']
+
+            ### set the value for the feature variable  ######
+            feature['geometry']['coordinates'] = [commPartner.longitude, commPartner.latitude]
+            feature['properties']['CommunityPartner'] = commPartner.name
+            feature['properties']['Address'] = fulladdress
+            feature['properties']['Website'] = commPartner.website_url
+            feature['properties']['Legislative District Number'] = commPartner.districtnumber
+            feature['properties']['Income'] = commPartner.income
+            feature['properties']['County'] = commPartner.county
+            collection['features'].append(feature)  #create the geojson
+    #jsonstring = pd.io.json.dumps(collection)
     return render(request, 'home/Countymap.html',
-                  {'countyData': countyData})
+                  {'collection': collection})
