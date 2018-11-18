@@ -24,6 +24,7 @@ def registerCampusPartner(request):
     if request.method == 'POST':
         campus_partner_form = CampusPartnerForm(request.POST)
 
+
         formset = ContactFormset(request.POST or None)
 
         if campus_partner_form.is_valid() and formset.is_valid():
@@ -173,7 +174,7 @@ def orgProfile(request):
 
     elif request.user.is_campuspartner:
         campus_user = get_object_or_404(CampusPartnerUser, user=request.user.id)
-        campus_partner = get_object_or_404(CampusPartner, pk=campus_user.id)
+        campus_partner = get_object_or_404(CampusPartner, id=campus_user.id)
         contacts = Contact.objects.filter(campus_partner= campus_partner.id)
 
         return render(request, 'partners/campus_partner_org_profile.html', {"contacts":contacts,

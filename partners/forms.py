@@ -45,6 +45,7 @@ class CampusPartnerContactForm(forms.ModelForm):
                    'email_id': forms.TextInput({'placeholder': '@abc.edu'}),
                    }
 
+
     def clean_first_name(self):
             firstname = self.cleaned_data['first_name']
             if any(char.isdigit() for char in firstname):
@@ -60,15 +61,20 @@ class CampusPartnerContactForm(forms.ModelForm):
     def clean_work_phone(self):
              workphone = self.cleaned_data['work_phone']
              if any(char.isalpha() for char in workphone):
-                 raise forms.ValidationError("Work Phone cannot have digits")
+                 raise forms.ValidationError("Work Phone cannot have alphabets")
              return workphone
 
     def clean_cell_phone(self):
         cellphone = self.cleaned_data['cell_phone']
         if any(char.isalpha() for char in cellphone):
-            raise forms.ValidationError("Cell Phone cannot have digits")
+            raise forms.ValidationError("Cell Phone cannot have alphabets")
         return cellphone
 
+    def clean_email_id(self):
+        email = self.cleaned_data['email_id']
+        if "edu" != email.split("@")[1].split('.')[1]:
+            raise forms.ValidationError("Please use .edu email ")
+        return email
 
 class CommunityPartnerForm(forms.ModelForm):
     community_type = forms.ModelChoiceField(queryset=CommunityType.objects, empty_label='Select Community Type')
@@ -140,14 +146,20 @@ class CommunityContactForm(forms.ModelForm):
 
     def clean_first_name(self):
         firstname = self.cleaned_data['first_name']
+        special_characters = "[~\!@#\$%\^&\*\(\)_\+{}\":;'\[\]]"
         if any(char.isdigit() for char in firstname):
             raise forms.ValidationError("First Name cannot have digits")
+        if any(char in special_characters for char in firstname):
+            raise forms.ValidationError("First Name should not have Special Character")
         return firstname
 
     def clean_last_name(self):
         lastname = self.cleaned_data['last_name']
+        special_characters = "[~\!@#\$%\^&\*\(\)_\+{}\":;'\[\]]"
         if any(char.isdigit() for char in lastname):
             raise forms.ValidationError("Last Name cannot have digits")
+        if any(char in special_characters for char in lastname):
+            raise forms.ValidationError("Last Name should not have Special Character")
         return lastname
 
 

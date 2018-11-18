@@ -86,11 +86,7 @@ class UserForm1(forms.ModelForm):
             raise forms.ValidationError("Last Name cannot have numbers")
         return lastname
     
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if "edu" != email.split("@")[1].split('.')[1]:
-            raise forms.ValidationError("Please use .edu email ")
-        return email
+
 
     def clean_password2(self):
         pas = self.cleaned_data['password']
