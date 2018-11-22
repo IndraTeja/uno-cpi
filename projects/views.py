@@ -237,6 +237,10 @@ def project_total_Add(request):
             #and formset2.is_valid()
             ##Convert address to cordinates and save the legislatve district and household income
             proj= project.save()
+        ##Project nme append
+
+            proj.project_name = proj.project_name + " :" + str(proj.academic_year) + " (" + str(proj.id) + ")"
+            print(proj.project_name)
             course = course.save(commit=False)
             course.project_name = proj
             course.save()
@@ -249,6 +253,7 @@ def project_total_Add(request):
                 proj.longitude = geocode_result[0]['geometry']['location']['lng']
                 proj.save()
             coord = Point([proj.longitude, proj.latitude])
+
             for i in range(len(district)):  # iterate through a list of district polygons
                 property = district[i]
                 polygon = shape(property['geometry'])  # get the polygons
