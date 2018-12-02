@@ -467,16 +467,23 @@ def SearchForProject(request):
     cpnames = []
     prjmission=[]
     commPartner = []
-
+    campusPartner=[]
     for object in ProjectMission.objects.order_by('mission'):
         prjmission.append(object.mission)
     #for project in ProjectMission.objects.all():
      #   prjmission.append(project.mission)
-    print(prjmission)
     for project in ProjectCommunityPartner.objects.all():
         commPartner.append(project.community_partner)
-    #print(commPartner)
 
+    for project in ProjectCampusPartner.objects.all():
+        campusPartner.append(project.campus_partner)
+    prjmission=list(prjmission)
+    campusPartner=list(campusPartner)
+    commPartner=list(commPartner)
+
+    # print(prjmission[1:5])
+    # print(campusPartner[1:5])
+    # print(commPartner[1:5])
     for project in Project.objects.all():
         pnames.append(project.project_name)
         #prjmission.append(ProjectMission)
@@ -493,27 +500,33 @@ def SearchForProject(request):
         searched_project = SearchProjectFilter(request.GET, queryset=Project.objects.all())
          #@login_required()
         project_ids = [p.id for p in searched_project.qs]
-        project_details = Project.objects.filter(id__in=project_ids)
+        project_details = Project.objects.all()
         NameOfProject= [p.project_name for p in searched_project.qs]
+        project_mission = ProjectMission.objects.filter(id__in=project_ids)
+        proj_camp_part = ProjectCampusPartner.objects.filter(id__in=project_ids)
+        proj_community_part=ProjectCommunityPartner.objects.filter(id__in=project_ids)
+
+        print(project_details)
+
+        comm_Part_name=[]
+        for  ProjectCommunityPartner.project_name in Project.objects.all():
+            comm_Part_name.append(ProjectCommunityPartner.community_partner)
+        #print("I am the new comm part names",comm_Part_name[1:5])
+
+        print("I am project names",NameOfProject[1:6])
+        # print("Iam project missions",project_mission[1:2])
+        # print("I am campus partners",proj_camp_part[1:2])
+        # print("I am community partners",proj_community_part[1:2])
+
+        data ={
+             'commPartner' :commPartner, 'campusPartner':campusPartner,'prjmission':prjmission, 'project_details':project_details
+        }
+        final_data =[]
+        final_data.append(data)
         camp_part_user = CampusPartnerUser.objects.filter(user_id=request.user.id)
         #projmisn = list(ProjectMission.objects.filter(user_id=request.user.id)
          #        cp = list(ProjectCommunityPartner.objects.filter(user_id=request.user.id)
-        #data = { 'projmisn': projmisn, 'cp': cp, 'camp_part':list_camp_part_names}
-
-        #camp_partner = camp_part_user[0].campus_partner
-         #
-        search_project_filtered = SearchProjectFilter(request.GET)
-        #SearchedProjectSave= ProjectCampusPartner( project_name=search_project_filtered.cleaned_data['project_name',campus_partner='camp_partner',
-        #total_hours='tot_hrs',total_people= 'tot_peop' ,wages = 'wage_peop'])
-        #NameOfCampusPartner = CampusPartnerUser.objects.all().filter()
-        #print(project_details)
-        # print(form.errors)
-        # if form.is_valid():
-        #     if(Project.objects.all().filter(project_name=form.cleaned_data['project_name']).exists()):
-        #         theProject= Project.objects.all().filter(project_name=form.cleaned_data['project_name'])
-        #         return render(request,'projects/SearchProject.html', {'form':ProjectSearchForm(),'searchedProject':theProject})
-        return render(request,'projects/SearchProject.html',{'searchedProject':project_details, 'theList':yesNolist})
-
+        return render(request,'projects/SearchProject.html',{'filter': searched_project,'data':final_data,'projectNames':names,'searchedProject':project_details, 'theList':yesNolist})
 
 
 @login_required()
