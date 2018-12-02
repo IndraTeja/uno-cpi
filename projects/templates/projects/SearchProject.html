@@ -87,7 +87,6 @@ margin-left:22px
                     <div class="panel-heading text-center"><h4 class="searchName"><b>Search for Existing Projects</b></h4></div>
 			            <div class="panel-body">
 
-
                          </div>
         <!--<div class="ui-widget">-->
         <!--</div>-->
@@ -97,19 +96,25 @@ margin-left:22px
                           <thead>
                           <tr>
                             <th>Project Name</th>
-                            <th>Engagement Type</th>
-                            <th>Activity Type</th>
-                            <th>Facilitator</th>
-                              <th>Semester</th>
-                            <th>Start Date </th>
-                            <th>End Date </th>
-                            <th> UNO Students</th>
-                            <th> UNO hours</th>
-                            <th> K12 Students</th>
-                            <th> K12 Hours </th>
-                            <th> UNO Faculty</th>
-                            <th>Other Community Participants</th>
-                            <th>Status</th>
+                <th>Mission Areas</th>
+                <th>Community Partners</th>
+                <th>Campus Partners</th>
+                <th>Engagement Type</th>
+                <th>Academic Year</th>
+                <th>Status</th>
+                <th>Semester</th>
+                <th>Academic Year</th>
+                <th>Start Date </th>
+                <th>End Date </th>
+                <th> UNO Students</th>
+                <th> UNO Student Hours</th>
+                <th> UNO Faculty</th>
+                <th> K12 Students</th>
+                <th> K12 Student Hours </th>
+                <th>Community Members</th>
+                <th>Activity Type</th>
+                <th>Facilitator</th>
+                <th>Description</th>
                             <th>Action</th>
 
                         </tr>
@@ -119,21 +124,27 @@ margin-left:22px
                 {% for project in searchedProject %}
 
                            <tr>
-
                             <td>{{ project.project_name }}</td>
+                            <td>{% for projmisn in project.projmisn %}
+                                   <b>{{ projmisn.mission_type}} : </b>{{ projmisn.mission}}<br> <br>{% endfor %} </td>
+                            <td> {% for cp in project.cp %} {{cp.community_partner}} <br> <br> {% endfor %} </td>
+                            <td> {% for camp_part in project.camp_part %} {{camp_part}} <br> <br> {% endfor %} </td>
                             <td>{{ project.engagement_type }}</td>
-                            <td>{{ project.activity_type }}</td>
-                            <td>{{ project.facilitator }}</td>
                             <td>{{ project.semester }}</td>
+                            <td>{{ project.status}}</td>
+                            <td>{{ project.semester }}</td>
+                           <td>{{ project.academic_year }}</td>
                             <td>{{ project.start_date }}</td>
                             <td>{{ project.end_date }}</td>
-                            <td>{{project.total_uno_students}}</td>
+                        <td>{{project.total_uno_students}}</td>
                             <td>{{project.total_uno_hours}}</td>
+                            <td>{{project.total_uno_faculty}}</td>
                             <td>{{project.total_k12_students}}</td>
                             <td>{{project.total_k12_hours}}</td>
-                            <td>{{project.total_uno_faculty}}</td>
                             <td>{{project.total_other_community_members}}</td>
-                            <td>{{ project.status}}</td>
+                            <td>{{ project.activity_type }}</td>
+                            <td>{{ project.facilitator }}</td>
+                            <td>{{ project.description }}</td>
                             <form action="." method="POST">
                             {% for current in theList %}
                                 {% if forloop.parentloop.counter0 == forloop.counter0 %}

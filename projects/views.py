@@ -21,6 +21,7 @@ from django.forms import inlineformset_factory, modelformset_factory
 from .filters import SearchProjectFilter
 import googlemaps
 from shapely.geometry import shape, Point
+from .models import *
 import pandas as pd
 import json
 gmaps = googlemaps.Client(key='AIzaSyBoBkkxBnB7x_GKESVPDLguK0VxSTSxHiI')
@@ -192,11 +193,13 @@ def proj_view_user(request):
          projmisn = list(ProjectMission.objects.filter(project_name_id=x.id))
          cp = list(ProjectCommunityPartner.objects.filter(project_name_id=x.id))
          proj_camp_par = list(ProjectCampusPartner.objects.filter(project_name_id=x.id))
+
          for proj_camp_par in proj_camp_par:
             camp_part = CampusPartner.objects.get(id=proj_camp_par.campus_partner_id)
             #print("camp_part is")
             #print(camp_part)
             camp_part_names.append(camp_part)
+
          list_camp_part_names = camp_part_names
          camp_part_names = []
 
@@ -211,11 +214,7 @@ def proj_view_user(request):
             'total_other_community_members': x.total_other_community_members, 'outcomes': x.outcomes,
             'total_economic_impact': x.total_economic_impact,'projmisn': projmisn, 'cp': cp, 'camp_part':list_camp_part_names
              }
-
          projects_list.append(data)
-
-
-
     return render(request, 'projects/Projectlist.html', {'project': projects_list})
 
 
@@ -447,14 +446,14 @@ def project_edit_new(request,pk):
                                                    'formset_comm_details': formset_comm_details,
                                                    'formset_camp_details':formset_camp_details})
 
+
 @login_required()
 def SearchForProject(request):
     names=[]
-    p=0
+    projects_list=[]
+
     for project in Project.objects.all():
         names.append(project.project_name)
-    #print(names)
-
     camp_part_user = CampusPartnerUser.objects.filter(user_id=request.user.id)
     for c in camp_part_user:
         p = c.campus_partner_id
@@ -466,9 +465,21 @@ def SearchForProject(request):
     yesNolist = []
     pnames = []
     cpnames = []
+    prjmission=[]
+    commPartner = []
+
+    for object in ProjectMission.objects.order_by('mission'):
+        prjmission.append(object.mission)
+    #for project in ProjectMission.objects.all():
+     #   prjmission.append(project.mission)
+    print(prjmission)
+    for project in ProjectCommunityPartner.objects.all():
+        commPartner.append(project.community_partner)
+    #print(commPartner)
 
     for project in Project.objects.all():
         pnames.append(project.project_name)
+        #prjmission.append(ProjectMission)
         for checkProject in proj_camp:
             cpnames.append(checkProject.project_name.project_name)
 
@@ -478,7 +489,6 @@ def SearchForProject(request):
         else:
             yesNolist.append(True)
 
-
     if request.method == "GET":
         searched_project = SearchProjectFilter(request.GET, queryset=Project.objects.all())
          #@login_required()
@@ -486,7 +496,11 @@ def SearchForProject(request):
         project_details = Project.objects.filter(id__in=project_ids)
         NameOfProject= [p.project_name for p in searched_project.qs]
         camp_part_user = CampusPartnerUser.objects.filter(user_id=request.user.id)
-        # camp_partner = camp_part_user[0].campus_partner
+        #projmisn = list(ProjectMission.objects.filter(user_id=request.user.id)
+         #        cp = list(ProjectCommunityPartner.objects.filter(user_id=request.user.id)
+        #data = { 'projmisn': projmisn, 'cp': cp, 'camp_part':list_camp_part_names}
+
+        #camp_partner = camp_part_user[0].campus_partner
          #
         search_project_filtered = SearchProjectFilter(request.GET)
         #SearchedProjectSave= ProjectCampusPartner( project_name=search_project_filtered.cleaned_data['project_name',campus_partner='camp_partner',
@@ -498,16 +512,18 @@ def SearchForProject(request):
         #     if(Project.objects.all().filter(project_name=form.cleaned_data['project_name']).exists()):
         #         theProject= Project.objects.all().filter(project_name=form.cleaned_data['project_name'])
         #         return render(request,'projects/SearchProject.html', {'form':ProjectSearchForm(),'searchedProject':theProject})
-        return render(request,'projects/SearchProject.html',{'filter': searched_project,'projectNames':names,'searchedProject':project_details, 'theList':yesNolist})
+        return render(request,'projects/SearchProject.html',{'searchedProject':project_details, 'theList':yesNolist})
+
 
 
 @login_required()
 def SearchForProjectAdd(request,pk):
     foundProject = None
     names = []
+
     for project in Project.objects.all():
         names.append(project.project_name)
-    print(request.user.id)
+
     campusUserProjectsNames = []
     campusPartnerProjects = ProjectCampusPartner.objects.all()
     for project in ProjectCampusPartner.objects.all():
@@ -517,13 +533,10 @@ def SearchForProjectAdd(request,pk):
         if project.pk == int(pk):
             foundProject = project
 
-    cp = CampusPartnerUser.objects.filter(user_id=request.user.id)
-    print("HERE ")
-    print(cp)
+    cp = CampusPartnerUser.objects.filter(user_id=request.user.id)[0].campus_partner
     object = ProjectCampusPartner(project_name=foundProject, campus_partner=cp)
     object.save()
     return redirect("proj_view_user")
-
 
 # List Projects for Public View
 
