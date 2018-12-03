@@ -184,19 +184,23 @@ def proj_view_user(request):
         #print(c)
     # get all the project names base on the campus partner id
     proj_camp = list(ProjectCampusPartner.objects.filter(campus_partner_id = p))
-
+    print("Iam proj_camp",proj_camp)
     for f in proj_camp:
         #print(l)
         k=list(Project.objects.filter(id = f.project_name_id))
-        #print(k)
+        # the proj_camp and k are doing the same thing, fetching all the project names of the logged in user
         for x in k:
          projmisn = list(ProjectMission.objects.filter(project_name_id=x.id))
          cp = list(ProjectCommunityPartner.objects.filter(project_name_id=x.id))
          proj_camp_par = list(ProjectCampusPartner.objects.filter(project_name_id=x.id))
+        #In the above 3 lines, it is printing project name for proj_camp_par and printing empty for both cp and projmisn
+         # print("I am missions",projmisn[1:3])
+         # print("I am commmuniuty part",cp[1:3])
+         # print("I am campus part",proj_camp_par[1:3])
 
          for proj_camp_par in proj_camp_par:
             camp_part = CampusPartner.objects.get(id=proj_camp_par.campus_partner_id)
-            #print("camp_part is")
+            print("camp_part is",camp_part)
             #print(camp_part)
             camp_part_names.append(camp_part)
 
@@ -451,7 +455,6 @@ def project_edit_new(request,pk):
 def SearchForProject(request):
     names=[]
     projects_list=[]
-
     for project in Project.objects.all():
         names.append(project.project_name)
     camp_part_user = CampusPartnerUser.objects.filter(user_id=request.user.id)
@@ -460,33 +463,14 @@ def SearchForProject(request):
         # print(c)
     # get all the project names base on the campus partner id
     proj_camp = list(ProjectCampusPartner.objects.filter(campus_partner_id=p))
-    #print(proj_camp)
     allProjects = SearchProjectFilter(request.GET, queryset=Project.objects.all())
     yesNolist = []
     pnames = []
     cpnames = []
-    prjmission=[]
-    commPartner = []
-    campusPartner=[]
-    for object in ProjectMission.objects.order_by('mission'):
-        prjmission.append(object.mission)
-    #for project in ProjectMission.objects.all():
-     #   prjmission.append(project.mission)
-    for project in ProjectCommunityPartner.objects.all():
-        commPartner.append(project.community_partner)
-
-    for project in ProjectCampusPartner.objects.all():
-        campusPartner.append(project.campus_partner)
-    prjmission=list(prjmission)
-    campusPartner=list(campusPartner)
-    commPartner=list(commPartner)
-
-    # print(prjmission[1:5])
-    # print(campusPartner[1:5])
-    # print(commPartner[1:5])
+    projects_list = []
+    camp_part_names = []
     for project in Project.objects.all():
         pnames.append(project.project_name)
-        #prjmission.append(ProjectMission)
         for checkProject in proj_camp:
             cpnames.append(checkProject.project_name.project_name)
 
@@ -498,35 +482,40 @@ def SearchForProject(request):
 
     if request.method == "GET":
         searched_project = SearchProjectFilter(request.GET, queryset=Project.objects.all())
-         #@login_required()
         project_ids = [p.id for p in searched_project.qs]
-        project_details = Project.objects.all()
-        NameOfProject= [p.project_name for p in searched_project.qs]
-        project_mission = ProjectMission.objects.filter(id__in=project_ids)
-        proj_camp_part = ProjectCampusPartner.objects.filter(id__in=project_ids)
-        proj_community_part=ProjectCommunityPartner.objects.filter(id__in=project_ids)
+        k = list(Project.objects.all())
+        print("here I am",k[1:5])
 
-        print(project_details)
+        for x in k:
+            projmisn =list(ProjectMission.objects.filter(project_name_id=x.id))
+            cp = list(ProjectCommunityPartner.objects.filter(project_name_id=x.id))
+            proj_camp_par = list(ProjectCampusPartner.objects.filter(project_name_id=x.id))
+            for proj_camp_par in proj_camp_par:
+                camp_part = CampusPartner.objects.get(id=proj_camp_par.campus_partner_id)
+                camp_part_names.append(camp_part)
+            list_camp_part_names = camp_part_names
+            print("I am the project mission",projmisn)
+            print("I am the camp partn",list_camp_part_names)
+            print("I am the community part,",cp)
+            print("I am the proj camp partner",proj_camp_par)
 
-        comm_Part_name=[]
-        for ProjectCommunityPartner.project_name in Project.objects.all():
-            comm_Part_name.append(ProjectCommunityPartner.community_partner)
-        #print("I am the new comm part names",comm_Part_name[1:5])
+            camp_part_names = []
+            data = {'pk': x.pk, 'name': x.project_name, 'engagementType': x.engagement_type,
+                    'activityType': x.activity_type,
+                    'facilitator': x.facilitator, 'semester': x.semester, 'status': x.status,
+                    'description': x.description,
+                    'startDate': x.start_date,
+                    'endDate': x.end_date, 'total_uno_students': x.total_uno_students,
+                    'total_uno_hours': x.total_uno_hours,
+                    'total_k12_students': x.total_k12_students, 'total_k12_hours': x.total_k12_hours,
+                    'total_uno_faculty': x.total_uno_faculty,
+                    'total_other_community_members': x.total_other_community_members, 'outcomes': x.outcomes,
+                    'total_economic_impact': x.total_economic_impact, 'projmisn': projmisn, 'cp': cp,
+                    'camp_part': list_camp_part_names
+                    }
+            projects_list.append(data)
 
-        print("I am project names",NameOfProject[1:6])
-        # print("Iam project missions",project_mission[1:2])
-        # print("I am campus partners",proj_camp_part[1:2])
-        # print("I am community partners",proj_community_part[1:2])
-
-        data ={
-             'commPartner' :commPartner, 'campusPartner':campusPartner,'prjmission':prjmission, 'project_details':project_details
-        }
-        final_data =[]
-        final_data.append(data)
-        camp_part_user = CampusPartnerUser.objects.filter(user_id=request.user.id)
-        #projmisn = list(ProjectMission.objects.filter(user_id=request.user.id)
-         #        cp = list(ProjectCommunityPartner.objects.filter(user_id=request.user.id)
-        return render(request,'projects/SearchProject.html',{'data':final_data,'searchedProject':project_details, 'theList':yesNolist})
+            return render(request,'projects/SearchProject.html',{'project': projects_list, 'theList':yesNolist})
 
 
 @login_required()
