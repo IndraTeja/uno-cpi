@@ -125,10 +125,10 @@ margin-left:22px
 
                            <tr>
                             <td>{{ project.project_name }}</td>
-                            <td>{% for projmisn in project.projmisn %}
-                                   <b>{{ projmisn.mission_type}} : </b>{{ projmisn.mission}}<br> <br>{% endfor %} </td>
-                            <td> {% for cp in project.cp %} {{cp.community_partner}} <br> <br> {% endfor %} </td>
-                            <td> {% for camp_part in project.camp_part %} {{camp_part}} <br> <br> {% endfor %} </td>
+                            <td>{% for prjmission in project.prjmission %}
+                                   <b>{{ prjmission.mission_type}} : </b>{{ prjmission.mission}}<br> <br>{% endfor %} </td>
+                            <td> {% for commPartner in project.commPartner %} {{commPartner.community_partner}} <br> <br> {% endfor %} </td>
+                            <td> {% for campusPartner in project.campusPartner %} {{campusPartner}} <br> <br> {% endfor %} </td>
                             <td>{{ project.engagement_type }}</td>
                             <td>{{ project.semester }}</td>
                             <td>{{ project.status}}</td>

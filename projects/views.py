@@ -509,7 +509,7 @@ def SearchForProject(request):
         print(project_details)
 
         comm_Part_name=[]
-        for  ProjectCommunityPartner.project_name in Project.objects.all():
+        for ProjectCommunityPartner.project_name in Project.objects.all():
             comm_Part_name.append(ProjectCommunityPartner.community_partner)
         #print("I am the new comm part names",comm_Part_name[1:5])
 
@@ -526,7 +526,7 @@ def SearchForProject(request):
         camp_part_user = CampusPartnerUser.objects.filter(user_id=request.user.id)
         #projmisn = list(ProjectMission.objects.filter(user_id=request.user.id)
          #        cp = list(ProjectCommunityPartner.objects.filter(user_id=request.user.id)
-        return render(request,'projects/SearchProject.html',{'filter': searched_project,'data':final_data,'projectNames':names,'searchedProject':project_details, 'theList':yesNolist})
+        return render(request,'projects/SearchProject.html',{'data':final_data,'searchedProject':project_details, 'theList':yesNolist})
 
 
 @login_required()
