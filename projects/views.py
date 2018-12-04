@@ -484,10 +484,11 @@ def SearchForProject(request):
         searched_project = SearchProjectFilter(request.GET, queryset=Project.objects.all())
         project_ids = [p.id for p in searched_project.qs]
         k = list(Project.objects.all())
-        print("here I am",k[1:5])
+        print("here I am",k[1:25])
 
         for x in k:
             projmisn =list(ProjectMission.objects.filter(project_name_id=x.id))
+            print(projmisn)
             cp = list(ProjectCommunityPartner.objects.filter(project_name_id=x.id))
             proj_camp_par = list(ProjectCampusPartner.objects.filter(project_name_id=x.id))
             for proj_camp_par in proj_camp_par:
@@ -515,7 +516,7 @@ def SearchForProject(request):
                     }
             projects_list.append(data)
 
-            return render(request,'projects/SearchProject.html',{'project': projects_list, 'theList':yesNolist})
+    return render(request,'projects/SearchProject.html',{'project': projects_list, 'theList':yesNolist})
 
 
 @login_required()
