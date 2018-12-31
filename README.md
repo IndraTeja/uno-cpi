@@ -1,5 +1,8 @@
 UNO CPI
-#UNO Community Partnership Intiative
+
+# UNO Community Partnership Intiative 
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) | [![HitCount](http://hits.dwyl.io/IndraTeja/uno-cpi.svg)](http://hits.dwyl.io/IndraTeja/uno-cpi) 
 
 The official repository of the Community Partnership initiative(UNO) Project for Fall 2018 Capstone Class Written in Python/Django
     •	Python Version 3.7 
@@ -22,6 +25,3 @@ navigate to the folder containing manage.py and run the following commands in or
 
 #Test Server:
 navigate to the folder containing manage.py and run the following command. python manage.py runserver navigate to http://127.0.0.1:8000/ to go to the home page..
-
-
-[![HitCount](http://hits.dwyl.io/IndraTeja/uno-cpi.svg)](http://hits.dwyl.io/IndraTeja/uno-cpi)
