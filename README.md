@@ -1,5 +1,3 @@
-UNO CPI
-
 # UNO Community Partnership Intiative 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) | [![HitCount](http://hits.dwyl.io/IndraTeja/uno-cpi.svg)](http://hits.dwyl.io/IndraTeja/uno-cpi) 
