@@ -26,7 +26,7 @@ Official repository of the Community Partnership initiative (UNO) Project for Fa
 1.	Install Django framework using the command:
 
     ```python
-    pip install Django==2.1.1
+    pip install django==2.1.1
     ```
 
 1.	Next, install the required packages to start the app, using the command:
@@ -44,12 +44,14 @@ Official repository of the Community Partnership initiative (UNO) Project for Fa
     ```
 
 # Database Migration:
-    Navigate to the repo directory with manage.py and migrate the database using the commands:
+
+   Navigate to the repo directory with manage.py and migrate the database using the commands:
+
     ```
     python manage.py makemigrations
     python manage.py migrate
     ```
-    Use the below command to start the server and open http://127.0.0.1:8000/ on your browser.
+   Use the below command to start the server and open http://127.0.0.1:8000/ on your browser.
 	
     `python manage.py runserver`
 
