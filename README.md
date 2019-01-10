@@ -47,12 +47,12 @@ Official repository of the Community Partnership initiative (UNO) Project for Fa
 
    Navigate to the repo directory with manage.py and migrate the database using the commands:
 
-    ```
+    
     python manage.py makemigrations
     python manage.py migrate
-    ```
+    
    Use the below command to start the server and open http://127.0.0.1:8000/ on your browser.
 	
-    `python manage.py runserver`
+    python manage.py runserver
 
 
